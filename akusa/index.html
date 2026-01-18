@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Memorial Cinta Abadi Kita</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d17b88;
+            --secondary-color: #b76e79;
+            --dark-color: #9c5d67;
+            --light-color: #f9f0f2;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fef9f9;
+            color: #333;
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f9f0f2 0%, #f2d9df 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-heart {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Floating Hearts Background */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(209, 123, 136, 0.15);
+            font-size: 24px;
+            animation: float 15s infinite linear;
+        }
+
+        /* Musik Control Premium */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .music-control:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .music-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .music-btn:hover {
+            background-color: rgba(209, 123, 136, 0.1);
+            transform: scale(1.1);
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(to right, #e0e0e0, var(--primary-color));
+            border-radius: 10px;
+            outline: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .volume-slider:hover {
+            opacity: 1;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-menu.hidden {
+            transform: translateX(-100px);
+            opacity: 0;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--dark-color);
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Header Premium */
+        header {
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            max-width: 90%;
+            width: 900px;
+            animation: fadeInUp 1.2s ease-out 0.5s both;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            line-height: 1.1;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
+            margin-bottom: 30px;
+            font-family: 'Dancing Script', cursive;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .love-date {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: clamp(60px, 10vw, 100px) 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: linear-gradient(135deg, #f9f0f2 0%, #f2d9df 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: clamp(40px, 6vw, 70px);
+            color: var(--dark-color);
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+            border-radius: 2px;
+        }
+
+        /* Photo Gallery Premium */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+            gap: clamp(20px, 4vw, 30px);
+            margin-top: 40px;
+        }
+
+        .photo-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 350px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.7));
+            z-index: 1;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .photo-item:hover:before {
+            opacity: 1;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            color: white;
+            z-index: 2;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .photo-item:hover .photo-caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Quotes Container Premium */
+        .quotes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .quote-item {
+            background: var(--white);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: var(--transition);
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .quote-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-item:before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 5rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .quote-text {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .quote-date {
+            color: var(--dark-color);
+            font-size: 0.95rem;
+            text-align: right;
+            font-weight: 500;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        /* Timeline Premium */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
+        }
+
+        .timeline-item {
+            margin-bottom: 60px;
+            position: relative;
+            width: 50%;
+            padding-right: 60px;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 50%;
+            padding-right: 0;
+            padding-left: 60px;
+            transform: translateX(50px);
+        }
+
+        .timeline-item:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .timeline-content {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-date i {
+            font-size: 1rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 0;
+            right: -10px;
+            width: 25px;
+            height: 25px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            z-index: 1;
+            border: 5px solid var(--white);
+            box-shadow: 0 0 0 4px var(--primary-color);
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            right: auto;
+            left: -10px;
+        }
+
+        /* Final Message Premium */
+        .final-message {
+            text-align: center;
+            padding: clamp(50px, 8vw, 80px) 20px;
+            background: linear-gradient(135deg, rgba(249, 240, 242, 0.9) 0%, rgba(242, 217, 223, 0.9) 100%);
+            border-radius: 20px;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .final-message:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="%23ffffff" opacity="0.1" d="M0,0 L100,0 L100,100 Z"/></svg>');
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        .heart-icon {
+            font-size: clamp(3rem, 8vw, 5rem);
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        /* Footer Premium */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            color: white;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        footer:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+        }
+
+        .footer-heart {
+            color: var(--primary-color);
+            margin: 0 5px;
+            animation: heartbeat 2s infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+            40% {transform: translateY(-15px) translateX(-50%);}
+            60% {transform: translateY(-7px) translateX(-50%);}
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .timeline:before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-right: 0;
+                padding-left: 70px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                margin-left: 0;
+                padding-left: 70px;
+            }
+            
+            .timeline-dot {
+                left: 21px;
+                right: auto;
+            }
+            
+            .timeline-item:nth-child(even) .timeline-dot {
+                left: 21px;
+            }
+            
+            .nav-menu {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                flex-wrap: wrap;
+                justify-content: center;
+                max-width: 90%;
+            }
+            
+            .nav-menu.hidden {
+                transform: translateX(-50%) translateY(100px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .music-control {
+                top: 15px;
+                right: 15px;
+                padding: 8px 12px;
+            }
+            
+            .photo-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .photo-item {
+                height: 300px;
+            }
+            
+            .quotes-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .section {
+                padding: 50px 15px;
+            }
+            
+            header {
+                min-height: 600px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .music-control {
+                flex-direction: column;
+                padding: 10px;
+                gap: 8px;
+            }
+            
+            .volume-slider {
+                width: 100%;
+            }
+            
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Progress Scroll Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(209, 123, 136, 0.3);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(209, 123, 136, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">
+            <i class="fas fa-heart"></i>
+        </div>
+        <div class="loading-text">Memuat Kenangan Indah...</div>
+    </div>
+
+    <!-- Floating Hearts Background -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu" id="navMenu">
+        <button class="nav-btn active" data-section="first-meet">Pertemuan</button>
+        <button class="nav-btn" data-section="special-moments">Momen</button>
+        <button class="nav-btn" data-section="gallery">Galeri</button>
+        <button class="nav-btn" data-section="quotes">Kata-Kata</button>
+        <button class="nav-btn" data-section="closing">Untukmu</button>
+    </nav>
+
+    <!-- Musik Control -->
+    <div class="music-control">
+        <button class="music-btn" id="playBtn" aria-label="Putar musik">
+            <i class="fas fa-play"></i>
+        </button>
+        <button class="music-btn" id="pauseBtn" aria-label="Jeda musik">
+            <i class="fas fa-pause"></i>
+        </button>
+        <input type="range" min="0" max="1" step="0.1" value="0.5" class="volume-slider" id="volumeSlider" aria-label="Kontrol volume">
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <h1>Kenangan Abadi Kita</h1>
+            <p class="subtitle">"Dalam setiap detik yang kita lewati bersama, aku menemukan arti kebahagiaan sejati"</p>
+            <p>Scroll untuk mengikuti perjalanan cinta kita</p>
+            <div class="love-date">Sejak 18 November 2025</div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- Bagian Pertemuan -->
+    <section class="section" id="first-meet">
+        <h2 class="section-title">Pertemuan Pertama</h2>
+        <div class="photo-gallery">
+            <div class="photo-item">
+                <img src="foto 9.jpeg" alt="Kenangan Pertama" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Pertama Bertemu</h3>
+                    <p>2022 semester 2</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 8.jpeg" alt="Momen Awal" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Momen Awal</h3>
+                    <p>Kenangan pertama kita</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 7.jpeg" alt="Senyuman Pertama" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Senyuman Pertama</h3>
+                    <p>Senyuman yang mencuri hatiku</p>
+                </div>
+            </div>
+        </div>
+        <div class="quotes-container">
+            <div class="quote-item">
+                <p class="quote-text">"Aku masih ingat jelas hari itu. Saat pertama kali mataku bertemu dengan senyummu, dunia seakan berhenti berputar. Ada sesuatu yang berkata dalam hatiku, 'Dialah orangnya.'"</p>
+                <div class="quote-date">2022 semester 2</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Momen Spesial -->
+    <section class="section" id="special-moments">
+        <h2 class="section-title">Momen Spesial</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> 2023 Agustus</div>
+                    <p>Kamu Block aku pada tanggal 30 agustus 2023 sebelum ultah kamu hahahah.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> 2024</div>
+                    <p>Akhirnya kamu buka block aku pada tanggal yang sama sebelum kamu block akuu wleee</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> 2024 bulan oktober</div>
+                    <p>Kamu mutusin hts kamu sama aku karena cowok kakak itu wleeeee</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> 2025, 18 November</div>
+                    <p>Kita mulai pacaran di hari itu dengan nada bercanda, kelihatan aneh tapi itu nyata terjadi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Galeri Foto -->
+    <section class="section" id="gallery">
+        <h2 class="section-title">Galeri Kenangan</h2>
+        <div class="photo-gallery">
+            <div class="photo-item">
+                <img src="foto 1.jpeg" alt="Kenangan 1" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Kenangan 1</h3>
+                    <p>Momen bahagia bersama</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 2.jpeg" alt="Kenangan 2" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Kenangan 2</h3>
+                    <p>Senja dan kita</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 3.jpeg" alt="Kenangan 3" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Kenangan 3</h3>
+                    <p>Tawa dan canda</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 4.jpeg" alt="Kenangan 4" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Kenangan 4</h3>
+                    <p>Bersama selamanya</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 5.jpeg" alt="Kenangan 5" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Kenangan 5</h3>
+                    <p>Di setiap sudut kota</p>
+                </div>
+            </div>
+            <div class="photo-item">
+                <img src="foto 6.jpeg" alt="Kenangan 6" loading="lazy">
+                <div class="photo-caption">
+                    <h3>Kenangan 6</h3>
+                    <p>Cinta kita abadi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Kutipan Cinta -->
+    <section class="section" id="quotes">
+        <h2 class="section-title">Kata-Kata untukmu</h2>
+        <div class="quotes-container">
+            <div class="quote-item">
+                <p class="quote-text">"Cinta tidak perlu sempurna, hanya perlu tulus. Dan cintamu adalah yang paling tulus yang pernah kurasakan."</p>
+                <div class="quote-date">Desember 2025</div>
+            </div>
+            <div class="quote-item">
+                <p class="quote-text">"Jika aku diberikan seribu kehidupan, di setiap kehidupan itu aku akan memilihmu lagi dan lagi. Kamu adalah takdirku."</p>
+                <div class="quote-date">Desember 2025</div>
+            </div>
+            <div class="quote-item">
+                <p class="quote-text">"Bersamamu, aku belajar arti cinta yang sebenarnya. Bukan tentang kesempurnaan, tetapi tentang penerimaan dan pertumbuhan bersama."</p>
+                <div class="quote-date">Januari 2026</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Penutup -->
+    <section class="section" id="closing">
+        <div class="final-message">
+            <div class="heart-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2 class="section-title">Untuk Kekasihku</h2>
+            <p style="font-size: clamp(1.1rem, 2.5vw, 1.3rem); max-width: 800px; margin: 0 auto 30px; line-height: 1.7;">
+                Setiap detik bersamamu adalah halaman terindah dalam buku hidupku. 
+                Kenangan kita tak akan pernah pudar oleh waktu. 
+                Terima kasih telah menjadi bagian dari hidupku, 
+                telah mengajariku tentang cinta, kesabaran, dan arti kebahagiaan sejati.
+            </p>
+            <p style="font-size: clamp(1.3rem, 3.5vw, 1.8rem); font-family: 'Dancing Script', cursive; color: var(--primary-color); line-height: 1.4; margin-top: 30px;">
+                Aku akan selalu mencintaimu, sekarang dan selamanya.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Website Memorial Cinta - Dibuat dengan <span class="footer-heart"><i class="fas fa-heart"></i></span> penuh cinta dan kenangan indah</p>
+        <p>© 2025 - Kenangan Abadi Kita | Setiap momen bersamamu adalah harta berharga</p>
+    </footer>
+
+    <!-- Audio untuk backsound -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="audio 1.mp3" type="audio/mp3">
+        <source src="audio 1.ogg" type="audio/ogg">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <script>
+        // Inisialisasi variabel global
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const navMenu = document.getElementById('navMenu');
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const backToTop = document.getElementById('backToTop');
+        const progressBar = document.getElementById('progressBar');
+        const floatingHearts = document.getElementById('floatingHearts');
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        // Fungsi untuk membuat floating hearts
+        function createFloatingHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                
+                // Random properties
+                const size = Math.random() * 20 + 10;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 20;
+                
+                heart.style.left = `${left}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                
+                floatingHearts.appendChild(heart);
+            }
+        }
+        
+        // Fungsi untuk menghilangkan loading screen
+        function hideLoadingScreen() {
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 1500);
+        }
+        
+        // Fungsi untuk kontrol musik
+        let isMusicPlaying = false;
+        
+        function playMusic() {
+            backgroundMusic.play().then(() => {
+                isMusicPlaying = true;
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'flex';
+            }).catch(error => {
+                console.log("Autoplay diblokir:", error);
+            });
+        }
+        
+        function pauseMusic() {
+            backgroundMusic.pause();
+            isMusicPlaying = false;
+            playBtn.style.display = 'flex';
+            pauseBtn.style.display = 'none';
+        }
+        
+        // Event listeners untuk kontrol musik
+        playBtn.addEventListener('click', playMusic);
+        pauseBtn.addEventListener('click', pauseMusic);
+        
+        volumeSlider.addEventListener('input', function() {
+            backgroundMusic.volume = parseFloat(this.value);
+        });
+        
+        // Auto play musik setelah interaksi pengguna
+        let userHasInteracted = false;
+        
+        function initMusicOnUserInteraction() {
+            if (!userHasInteracted) {
+                userHasInteracted = true;
+                playMusic();
+                
+                document.removeEventListener('click', initMusicOnUserInteraction);
+                document.removeEventListener('touchstart', initMusicOnUserInteraction);
+                document.removeEventListener('keydown', initMusicOnUserInteraction);
+            }
+        }
+        
+        document.addEventListener('click', initMusicOnUserInteraction);
+        document.addEventListener('touchstart', initMusicOnUserInteraction);
+        document.addEventListener('keydown', initMusicOnUserInteraction);
+        
+        // Atur tampilan awal tombol musik
+        pauseBtn.style.display = 'none';
+        
+        // Fungsi untuk navigasi
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const sectionId = this.getAttribute('data-section');
+                const section = document.getElementById(sectionId);
+                
+                // Update active button
+                navBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Scroll ke section
+                window.scrollTo({
+                    top: section.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Fungsi untuk back to top
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Fungsi untuk update progress bar
+        function updateProgressBar() {
+            const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            progressBar.style.width = `${scrolled}%`;
+        }
+        
+        // Fungsi untuk toggle back to top button
+        function toggleBackToTop() {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+                navMenu.classList.remove('hidden');
+            } else {
+                backToTop.classList.remove('visible');
+                navMenu.classList.add('hidden');
+            }
+        }
+        
+        // Fungsi untuk animasi timeline items
+        function animateTimelineItems() {
+            timelineItems.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (itemTop < windowHeight * 0.85) {
+                    item.classList.add('visible');
+                }
+            });
+        }
+        
+        // Fungsi untuk update active nav button berdasarkan scroll
+        function updateActiveNavOnScroll() {
+            const sections = document.querySelectorAll('.section');
+            const scrollPos = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navBtns.forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.getAttribute('data-section') === sectionId) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Event listener untuk scroll
+        window.addEventListener('scroll', () => {
+            updateProgressBar();
+            toggleBackToTop();
+            animateTimelineItems();
+            updateActiveNavOnScroll();
+        });
+        
+        // Efek muncul saat scroll (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Terapkan efek pada elemen yang ingin dianimasikan
+        document.querySelectorAll('.section, .quote-item, .photo-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+        
+        // Perbaikan untuk gambar yang gagal dimuat
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('error', function() {
+                this.style.backgroundColor = '#f0f0f0';
+                this.style.display = 'flex';
+                this.style.alignItems = 'center';
+                this.style.justifyContent = 'center';
+                this.innerHTML = '<div style="color:#999; font-size:16px; text-align:center;"><i class="fas fa-heart-broken" style="font-size:2rem; margin-bottom:10px;"></i><br>Gambar tidak tersedia</div>';
+            });
+        });
+        
+        // Tambahkan tahun saat ini di footer
+        document.querySelector('footer p:last-child').innerHTML = `© ${new Date().getFullYear()} - Kenangan Abadi Kita | Setiap momen bersamamu adalah harta berharga`;
+        
+        // Inisialisasi saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            createFloatingHearts();
+            hideLoadingScreen();
+            animateTimelineItems();
+            updateProgressBar();
+            toggleBackToTop();
+        });
+        
+        // Optimasi untuk performa scroll di mobile
+        window.addEventListener('scroll', () => {
+            if (!window.requestId) {
+                window.requestId = requestAnimationFrame(() => {
+                    // Kode yang berhubungan dengan scroll
+                    window.requestId = null;
+                });
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
